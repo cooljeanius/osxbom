@@ -1,0 +1,12 @@
+*DS_Store*
+*svn*
+*.cache
+*.log
+stamp-h*
+*.o
+lsbom
+*~
+config.h
+Makefile
+Makefile.orig
+*.status

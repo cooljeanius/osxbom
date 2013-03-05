@@ -1,0 +1,9 @@
+NAME=lsbom
+
+all: $(NAME)
+
+$(NAME): $(NAME).cpp bom.h
+	$(CXX) -o $@ $< -I. -Wall -Werror
+
+clean:
+	rm -f $(NAME) $(NAME).o

@@ -44,6 +44,7 @@ variant egallager description {Use my GitHub fork for the source} {
     fetch.type 	             git
     git.url 	             git://github.com/cooljeanius/${name}.git
     use_autoreconf           yes
+    use_configure            yes
     autoreconf.args          -fvi
     depends_build-append     port:gawk \
                              port:grep

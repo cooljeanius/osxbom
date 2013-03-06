@@ -1,0 +1,50 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+
+name                osxbom
+version             0.0.3
+categories          sysutils
+maintainers         gwmail.gwu.edu:egall openmaintainer
+platforms           darwin
+license             public-domain
+
+description         A free re-implementation of the NextSTEP/OSX lsbom utility
+long_description    ${description}. Used by the PureDarwin project to work with MacPorts \
+                    binary packages.
+homepage            https://cauldrondevelopment.com/svn/${name}/trunk/
+
+livecheck.type      none
+
+fetch.type          svn
+svn.url             ${homepage}
+svn.revision        3
+
+worksrcdir          trunk
+
+use_configure       no
+
+destroot {
+    xinstall ${worksrcpath}/lsbom ${destroot}${prefix}/bin/${name}
+    xinstall -d ${destroot}${prefix}/include/${name}
+    xinstall ${worksrcpath}/bom.h ${destroot}${prefix}/include/${name}
+}
+
+variant no_rename description {Don't rename the files installed. Warning: This variant shadows the system lsbom.} {
+    destroot {
+        xinstall ${worksrcpath}/lsbom ${destroot}${prefix}/bin
+        xinstall ${worksrcpath}/bom.h ${destroot}${prefix}/include
+    }
+}
+
+variant egallager description {Use my GitHub fork for the source} {
+    PortGroup                github 1.0
+    github.setup             cooljeanius ${name} ${version}
+    fetch.type 	             git
+    git.url 	             git://github.com/cooljeanius/${name}.git
+    use_autoreconf           yes
+    autoreconf.args          -fvi
+    depends_build-append     port:gawk \
+                             port:grep
+}

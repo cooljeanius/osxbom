@@ -9,7 +9,7 @@ bin_PROGRAMS = $(NAME)
 lsbom_SOURCES = lsbom.cpp bom.h
 lsbom_CPPFLAGS = -I.
 lsbom_CFLAGS = -Wall -Wextra @MAINT@ -Werror
-lsbom_CXXFLAGS = -Wall -Wextra -Wformat=2 -Wundef -Wlogical-op -Winvalid-pch -Wshadow @MAINT@ -Wc++11-compat -Wuseless-cast -Waggregate-return -Wconversion -Wsign-conversion -Wmissing-declarations -Wzero-as-null-pointer-constant -pedantic -std=gnu++98
+lsbom_CXXFLAGS = -Wall -Wextra -Wformat=2 -Wundef -Winvalid-pch -Wshadow @MAINT@ -Wlogical-op -Wc++11-compat -Wuseless-cast -Waggregate-return -Wconversion -Wsign-conversion -Wmissing-declarations -Wzero-as-null-pointer-constant -pedantic -std=gnu++98
 
 noinst_HEADERS = bom.h
 

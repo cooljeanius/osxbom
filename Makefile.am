@@ -28,13 +28,18 @@ clean-local:
 	@RM_PROG@ -f $(NAME) $(NAME).o
 .PHONY: clean-local
 
-DISTCLEANFILES = *~ autoscan.log .DS_Store @MAINT@ lsbom.8
+DISTCLEANFILES = *~ autoscan.log gdb.log .DS_Store @MAINT@ lsbom.8
 
 distclean-local: clean-local
 	@RM_PROG@ -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
 	@RM_PROG@ -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.zip
 	@RM_PROG@ -rfv autom4te.cache || rmdir autom4te.cache
-	(test -w @PACKAGE_TARNAME@-@PACKAGE_VERSION@ && (rm -rf @PACKAGE_TARNAME@-@PACKAGE_VERSION@ || rmdir @PACKAGE_TARNAME@-@PACKAGE_VERSION@)) || stat @PACKAGE_TARNAME@-*.*.* 2>&1 || echo "it can be difficult to distclean the results of distcheck"
+	if test -d build; then \
+	  @RM_PROG@ -rfv build || rmdir build; \
+	elif test -d ${srcdir}/build; then \
+	  @RM_PROG@ -rfv ${srcdir}/build || rmdir ${srcdir}/build; \
+	fi
+	(test -w @PACKAGE_TARNAME@-@PACKAGE_VERSION@ && (@RM_PROG@ -rfv @PACKAGE_TARNAME@-@PACKAGE_VERSION@ || rmdir @PACKAGE_TARNAME@-@PACKAGE_VERSION@)) || stat @PACKAGE_TARNAME@-*.*.* 2>&1 || echo "it can be difficult to distclean the results of distcheck"
 .PHONY: distclean-local
 
 EXTRA_DIST = test.bom Portfile TODO Makefile_orig_hardcoded

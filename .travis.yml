@@ -1,0 +1,8 @@
+language: cpp
+
+# try to build:
+script: ./configure && make && make check && make distcheck
+
+compiler:
+  - clang
+  - gcc

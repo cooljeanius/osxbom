@@ -1,4 +1,4 @@
 This code was taken from https://cauldrondevelopment.com/svn/osxbom/trunk/
 
 lsbom.cpp: This code implements a clone of the NextSTEP/OSX lsbom utility
-bom.h: These structure define part of the NextSTEP/OSX BOM file format
+bom.h: These structures define part of the NextSTEP/OSX BOM file format

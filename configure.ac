@@ -1,14 +1,14 @@
 dnl#                                               -*- Autoconf -*-
 dnl# Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.61])
-AC_INIT([osxbom],[0.0.3],[])
-AC_CONFIG_SRCDIR([bom.h])
-AC_CONFIG_HEADER([config.h])
+AC_PREREQ([2.61])dnl
+AC_INIT([osxbom],[0.0.3],[])dnl
+AC_CONFIG_SRCDIR([bom.h])dnl
+AC_CONFIG_HEADER([config.h])dnl
 
 dnl# Set up Automake.
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([1.10 foreign])
+AM_INIT_AUTOMAKE([1.10 foreign])dnl
 AM_MAINTAINER_MODE
 
 # Checks for programs.
@@ -44,5 +44,5 @@ AC_CHECK_FUNCS([atoi getopt exit ntohl strlen what])dnl
 AC_CHECK_DECLS([ntohl])dnl
 
 # Output.
-AC_CONFIG_FILES([Makefile Makefile.orig])dnl
+AC_CONFIG_FILES([Makefile Makefile_orig])dnl
 AC_OUTPUT

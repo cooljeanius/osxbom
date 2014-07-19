@@ -24,13 +24,13 @@ clean-local:
 	@RM_PROG@ -f $(NAME) $(NAME).o
 .PHONY: clean-local
 
-DISTCLEANFILES = *~ autoscan.log
+DISTCLEANFILES = *~ autoscan.log .DS_Store
 
 distclean-local: clean-local
 	@RM_PROG@ -rfv autom4te.cache || rmdir autom4te.cache
 .PHONY: distclean-local
 
-EXTRA_DIST = test.bom Portfile TODO
+EXTRA_DIST = test.bom Portfile TODO Makefile_orig_hardcoded
 
 check-local: ./$(NAME) ${srcdir}/test.bom
 	./$(NAME) ${srcdir}/test.bom

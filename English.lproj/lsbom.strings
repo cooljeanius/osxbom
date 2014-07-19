@@ -1,0 +1,57 @@
+Usage: %s [-h] [-s] [-f] [-d] [-l] [-b] [-c] [-m] [-x]
+    [--arch archVal] [-p parameters] bom ...
+    -h              print full usage
+    -s              print pathnames only
+    -f              list files
+    -d              list directories
+    -l              list symbolic links
+    -b              list block devices
+    -c              list character devices
+    -m              print modified times
+    -x              suppress modes for directories and symlinks
+    --arch archVal  print info for architecture archVal ("ppc", "i386", "hppa", "sparc", etc)
+    -p parameters   print only some of the results.  EACH OPTION CAN ONLY BE USED ONCE
+Parameters:
+file name
+file name with quotes (i.e. "/usr/bin/lsbom")
+file mode (permissions)
+symbolic file mode
+group id
+group name
+user id
+user name
+mod time
+formatted mod time
+file size
+formatted size
+32-bit checksum
+user id/group id
+user name/group name
+EACH OPTION CAN ONLY BE USED ONCE.
+Unknown print option '%c'
+Unrecognized architecture %s
+hbcdflmsxp:
+**** Can't open %s.
+can't get enumerator for %s.
+arch
+help
+-arch
+--arch
+-lang
+--lang
+-bom
+--bom
+-outBom
+--outBom
+-keepBinariesList
+--keepBinariesList
+-keepBinariesPattern
+--keepBinariesPattern
+-keepBinaries
+--keepBinaries
+-bomThin
+--bomThin
+-rsrc
+--rsrc
+-rsrcFork
+@(#)PROGRAM:lsbom  PROJECT:BomCmds-42

@@ -9,9 +9,13 @@ bin_PROGRAMS = $(NAME)
 lsbom_SOURCES = lsbom.cpp bom.h
 lsbom_CPPFLAGS = -I.
 lsbom_CFLAGS = -Wall -Wextra @MAINT@ -Werror
-lsbom_CXXFLAGS = -Wall -Wextra -Wc++11-compat -Wuseless-cast -Wformat=2 -Wundef -Wlogical-op -Winvalid-pch @MAINT@ -Waggregate-return -Wshadow -Wconversion -Wsign-conversion -Wmissing-declarations -Wzero-as-null-pointer-constant -pedantic -std=gnu++98
+lsbom_CXXFLAGS = -Wall -Wextra -Wc++11-compat -Wuseless-cast -Wformat=2 -Wundef -Wlogical-op -Winvalid-pch -Wshadow @MAINT@ -Waggregate-return -Wconversion -Wsign-conversion -Wmissing-declarations -Wzero-as-null-pointer-constant -pedantic -std=gnu++98
 
 noinst_HEADERS = bom.h
+
+man_MANS = osxbom.1 lsbom.8
+
+dist_doc_DATA = README
 
 all: $(NAME)
 .PHONY: all
@@ -24,14 +28,53 @@ clean-local:
 	@RM_PROG@ -f $(NAME) $(NAME).o
 .PHONY: clean-local
 
-DISTCLEANFILES = *~ autoscan.log .DS_Store
+DISTCLEANFILES = *~ autoscan.log .DS_Store @MAINT@ lsbom.8
 
 distclean-local: clean-local
+	@RM_PROG@ -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
+	@RM_PROG@ -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.zip
 	@RM_PROG@ -rfv autom4te.cache || rmdir autom4te.cache
+	(test -w @PACKAGE_TARNAME@-@PACKAGE_VERSION@ && (rm -rf @PACKAGE_TARNAME@-@PACKAGE_VERSION@ || rmdir @PACKAGE_TARNAME@-@PACKAGE_VERSION@)) || stat @PACKAGE_TARNAME@-*.*.* 2>&1 || echo "it can be difficult to distclean the results of distcheck"
 .PHONY: distclean-local
 
 EXTRA_DIST = test.bom Portfile TODO Makefile_orig_hardcoded
+EXTRA_DIST += osxbom.xcodeproj/project.pbxproj osxbom.1 lsbom.8
 
 check-local: ./$(NAME) ${srcdir}/test.bom
 	./$(NAME) ${srcdir}/test.bom
 .PHONY: check-local
+
+EXTRA_DIST += English.lproj/lsbom.strings expected_results_for_test_bom.txt
+
+English.lproj/lsbom.strings:
+	if test -x /usr/bin/lsbom; then strings /usr/bin/lsbom | tee $@; fi
+
+MAINTAINERCLEANFILES = configure.scan English.lproj/lsbom.strings lsbom.8
+
+configure.scan:
+	autoscan || touch configure.scan
+
+lsbom.8:
+	if test -e /usr/share/man/man8/lsbom.8; then \
+	  cp -v /usr/share/man/man8/lsbom.8 .; \
+	else \
+	  touch $@; \
+	fi
+
+EXTRA_DIST += lsbom_disasm.s lsbom_disasm_annot.s
+
+lsbom_disasm.s:
+	if test -x /usr/bin/lsbom; then\
+	  otool -tv /usr/bin/lsbom | tee $@; \
+	else \
+	  touch $@; \
+	fi
+
+lsbom_disasm_annot.s:
+	if test -x /usr/bin/lsbom; then\
+	  otool -tvV /usr/bin/lsbom | tee $@; \
+	else \
+	  touch $@; \
+	fi
+
+MAINTAINERCLEANFILES += lsbom_disasm.s lsbom_disasm_annot.s

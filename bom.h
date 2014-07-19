@@ -1,6 +1,9 @@
-#ifndef OSX_BOM_H
-#define OSX_BOM_H
+// bom.h
 
+#ifndef OSX_BOM_H
+#define OSX_BOM_H 1
+
+//
 // These structure define part of the NextSTEP/OSX BOM file format
 //
 // Initial code
@@ -15,6 +18,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // This program is in the public domain.
+//
 
 #include <stdint.h>
 
@@ -25,7 +29,7 @@ struct BOMHeader {
   uint32_t indexOffset; // Length of first part
   uint32_t indexLength; // Length of second part
   uint32_t varsOffset;
-  uint32_t trailerLen; // TODO What does this data at the end mean?
+  uint32_t trailerLen; // FIXME: What does this data at the end mean?
 } __attribute__((packed));
 
 
@@ -36,7 +40,7 @@ struct BOMIndex {
 
 
 struct BOMIndexHeader {
-  uint32_t unknown0; // TODO What is this?  It's not the length of the array.
+  uint32_t unknown0; // FIXME: What is this? It is not the length of the array...
   BOMIndex index[];
 } __attribute__((packed));
 
@@ -44,7 +48,7 @@ struct BOMIndexHeader {
 struct BOMTree { // 21 bytes
   char tree[4]; // = "tree"
   uint32_t unknown0;
-  uint32_t child; // TODO Not sure about this one
+  uint32_t child; // FIXME: Not sure about this one...
   uint32_t nodeSize; // byte count of each entry in the tree (BOMPaths)
   uint32_t pathCount; // total number of paths in all leaves combined
   uint8_t unknown3;
@@ -72,7 +76,7 @@ struct BOMPathIndices {
 
 struct BOMPaths {
   uint16_t isLeaf; // if 0 then this entry refers to other BOMPaths entries
-  uint16_t count;  // for leaf, count of paths. for top level, # of leafs - 1
+  uint16_t count;  // for leaf, count of paths. for top level, (# of leafs - 1)
   uint32_t forward;  // next leaf, when there are multiple leafs
   uint32_t backward; // previous leaf, when there are multiple leafs
   BOMPathIndices indices[];
@@ -87,7 +91,7 @@ enum {
 };
 
 
-// Not sure of all the corect values here
+// Not sure of all the corect values here:
 enum {
   ARCH_PPC = 0,
   ARCH_I386 = 1 << 12,
@@ -99,7 +103,7 @@ enum {
 struct BOMPathInfo2 {
   uint8_t type; // See types above
   uint8_t unknown0; // = 1?
-  uint16_t architecture; // Not sure exactly what this means
+  uint16_t architecture; // Not sure exactly what this means...
   uint16_t mode;
   uint32_t user;
   uint32_t group;
@@ -113,7 +117,7 @@ struct BOMPathInfo2 {
   uint32_t linkNameLength;
   char linkName[];
 
-  // TODO executable files have a buch of other crap here
+  // FIXME: executable files have a buch of other crap here:
 } __attribute__((packed));
 
 
@@ -128,6 +132,14 @@ struct BOMFile {
   char name[];
 } __attribute__((packed));
 
+// prototypes:
+char *lookup(int i, uint32_t *length);
+void short_usage(void);
+void usage_error(const char *msg);
+void usage(void);
+void error(const char *msg);
+void version(void);
 
 #endif // OSX_BOM_H
 
+// EOF

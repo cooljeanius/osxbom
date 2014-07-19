@@ -15,6 +15,39 @@
 // This program is in the public domain.
 //
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+# if !defined(VERSION_STRING)
+#  if defined(PACKAGE_STRING)
+#   define VERSION_STRING PACKAGE_STRING
+#  else
+#   if !defined(VERSION_STRING_NAME_PART)
+#    if defined(PACKAGE)
+#     define VERSION_STRING_NAME_PART PACKAGE
+#    elif defined(PACKAGE_NAME)
+#     define VERSION_STRING_NAME_PART PACKAGE_NAME
+#    elif defined(PACKAGE_TARNAME)
+#     define VERSION_STRING_NAME_PART PACKAGE_TARNAME
+#    else
+#     define VERSION_STRING_NAME_PART "lsbom"
+#    endif // PACKAGE || PACKAGE_NAME || PACKAGE_TARNAME
+#   endif // !VERSION_STRING_NAME_PART
+#   if !defined(VERSION_STRING_VERSION_PART)
+#    if defined(PACKAGE_VERSION)
+#     define VERSION_STRING_VERSION_PART PACKAGE_VERSION
+#    elif defined(VERSION)
+#     define VERSION_STRING_VERSION_PART VERSION
+#    else
+#     define VERSION_STRING_VERSION_PART "0.0.x"
+#    endif // PACKAGE_VERSION || VERSION
+#   endif // !VERSION_STRING_VERSION_PART
+#   define VERSION_STRING VERSION_STRING_NAME_PART VERSION_STRING_VERSION_PART
+#  endif // PACKAGE_STRING
+# endif // !VERSION_STRING
+#else
+# define LSBOM_CPP_NON_AUTOTOOLS_BUILD 1
+#endif // HAVE_CONFIG_H
+
 #include "bom.h"
 
 #include <iostream>
@@ -26,14 +59,20 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h> // For getopt() on some platforms
+#ifdef HAVE_GETOPT_H
+# include <getopt.h>
+#endif // HAVE_GETOPT_H
 #include <ctype.h>
 
 using namespace std;
 
-// Pass -D to enable debug outputs
+// Pass -D to enable debug outputs:
 #define DEBUG(level, msg)                                               \
-  if (level <= debug) {cout << "DEBUG(" << level << "): " << msg << endl;}
+  if (level <= debug) {                                                 \
+    cout << "DEBUG(" << level << "): " << msg << endl;                  \
+  }
 
 enum {
   LIST_FILES = 1 << 0,
@@ -50,19 +89,21 @@ static char *data;
 static BOMIndexHeader *indexHeader;
 
 char *lookup(int i, uint32_t *length = 0) {
-  BOMIndex *index = indexHeader->index + ntohl(i);
-  if (length) *length = ntohl(index->length);
+  BOMIndex *index = (indexHeader->index + ntohl(i));
+  if (length) {
+    *length = ntohl(index->length);
+  }
   uint32_t addr = ntohl(index->address);
 
   DEBUG(2, "@ index=0x" << hex << ntohl(i)
-        << " addr=0x" << hex << setw(4) << setfill('0') << addr
-        << " len=" << dec << ntohl(index->length));
+           << " addr=0x" << hex << setw(4) << setfill('0') << addr
+           << " len=" << dec << ntohl(index->length));
 
-  return data + addr;
+  return (data + addr);
 }
 
 
-void short_usage() {
+void short_usage(void) {
   cout << "Usage: lsbom [-h] [-s] [-f] [-d] [-l] [-b] [-c] [-m] [-x]\n"
        << "\t"
 #if 0
@@ -79,7 +120,7 @@ void usage_error(const char *msg) {
 }
 
 
-void usage() {
+void usage(void) {
   short_usage();
   cout << "\n"
     "\t-h              print full usage\n"
@@ -95,6 +136,9 @@ void usage() {
     "\t--arch archVal  print info for architecture archVal (\"ppc\", "
     "\"i386\", \"hppa\", \"sparc\", etc)\n"
 #endif // 0
+#if !defined(__APPLE__)
+    "\t-v              print version info"
+#endif /* !__APPLE__ */
     "\t-p parameters   print only some of the results.  EACH OPTION CAN "
     "ONLY BE USED ONCE\n"
     "\t\tParameters:\n"
@@ -127,6 +171,30 @@ void error(const char *msg) {
   exit(1);
 }
 
+// The Xcode project should have 'USE_AGV' defined in its preprocessor
+// macros entry:
+#if defined(__APPLE__) && defined(USE_AGV)
+extern const unsigned char osxbomVersionString[];
+extern const double osxbomVersionNumber;
+#endif /* __APPLE__ && USE_AGV */
+
+void version(void) {
+#if defined(__APPLE__) && defined(USE_AGV)
+  printf("version: ");
+  if (*osxbomVersionString) {
+    printf("%s ", osxbomVersionString);
+  }
+  if (osxbomVersionNumber) {
+    printf("%f", osxbomVersionNumber);
+  }
+#else
+# if defined(HAVE_CONFIG_H) && defined(VERSION_STRING)
+  printf("version: %s", VERSION_STRING);
+# endif /* HAVE_CONFIG_H */
+#endif /* __APPLE__ && USE_AGV */
+  cout << "\n";
+}
+
 
 int main(int argc, char *argv[]) {
   bool suppressDirSimModes = false;
@@ -136,29 +204,51 @@ int main(int argc, char *argv[]) {
   char params[16] = "";
 
   while (true) {
-    char c = getopt(argc, argv, "hsfdlbcmxp:D::");
-    if (c == -1) break;
+    // FIXME: switch to getopt_long():
+    char c = getopt(argc, argv, "hsfdlbcmxvp:D::");
+    if (c == -1) {
+      break;
+    } else {
+      if (debug >= 2) {
+        printf("c is '%c'\n", c);
+      }
+    }
 
     switch (c) {
-    case 'h': usage(); exit(0);
-    case 's': pathsOnly = true; break;
-    case 'f': listType |= LIST_FILES; break;
-    case 'd': listType |= LIST_DIRS; break;
-    case 'l': listType |= LIST_LINKS; break;
-    case 'b': listType |= LIST_BDEVS; break;
-    case 'c': listType |= LIST_CDEVS; break;
-    case 'm': strcat(params, "T"); break;
-    case 'x': suppressDirSimModes = true; break;
-    case 'a': usage_error("--arch not supported");
-    case 'p':
-      if (15 < strlen(optarg)) usage_error("Too many parameters");
-      strcpy(params, optarg);
-      break;
-    case 'D':
-      if (optarg) debug = atoi(optarg);
-      else debug++;
-      break;
-    case ':': case '?': short_usage(); exit(1); break;
+      case 'h': usage(); exit(0); break;
+      case 's': pathsOnly = true; break;
+      case 'f': listType |= LIST_FILES; break;
+      case 'd': listType |= LIST_DIRS; break;
+      case 'l': listType |= LIST_LINKS; break;
+      case 'b': listType |= LIST_BDEVS; break;
+      case 'c': listType |= LIST_CDEVS; break;
+      case 'm': strcat(params, "T"); break;
+      case 'x': suppressDirSimModes = true; break;
+      case 'v': version(); exit(0); break;
+      case 'a': usage_error("--arch not supported");
+      case 'p':
+        if (15 < strlen(optarg)) {
+          usage_error("Too many parameters");
+        }
+        strcpy(params, optarg);
+        break;
+      case 'D':
+        if (optarg) {
+          debug = atoi(optarg);
+        } else {
+          debug++;
+        }
+        break;
+      case ':': case '?':
+        if (optopt) {
+          switch (optopt) {
+            case '-':
+              continue;
+            default:
+              short_usage(); exit(1); break;
+          }
+        }
+      case '-': continue;
     }
   }
 
@@ -167,24 +257,26 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  if (listType == 0) listType = LIST_ALL;
+  if (listType == 0) {
+    listType = LIST_ALL;
+  }
   if (!params[0]) {
     strcpy(params, "fm/scl0");
     suppressDevSize = true;
   }
 
-  for (int i = optind; i < argc; i++) {
-    fstream f(argv[i], ios::in | ios::binary);
+  for (int i = optind; (i < argc); i++) {
+    fstream f(argv[i], (ios::in | ios::binary));
 
-    // Get file length
+    // Get file length:
     f.seekg(0, ios::end);
     streampos length = f.tellg();
     f.seekg(0);
 
-    // Allocate space
+    // Allocate space:
     data = new char[length];
 
-    // Read data
+    // Read data:
     f.read(data, length);
 
     if (f.fail()) {
@@ -203,10 +295,10 @@ int main(int argc, char *argv[]) {
 
     indexHeader = (BOMIndexHeader *)(data + ntohl(header->indexOffset));
 
-    // Process vars
+    // Process vars:
     BOMVars *vars = (BOMVars *)(data + ntohl(header->varsOffset));
     char *ptr = (char *)vars->first;
-    for (unsigned i = 0; i < ntohl(vars->count); i++) {
+    for (unsigned ii = 0; (ii < ntohl(vars->count)); (ii++)) {
       BOMVar *var = (BOMVar *)ptr;
 
       uint32_t varDataLength;
@@ -214,7 +306,8 @@ int main(int argc, char *argv[]) {
       BOMTree *tree = (BOMTree *)varData;
       string name = string(var->name, var->length);
 
-      DEBUG(2, "BOMVar 0x" << hex << ntohl(var->index) << ' ' << name << ':');
+      DEBUG(2, "BOMVar 0x" << hex << ntohl(var->index) << ' ' << name
+               << ':');
 
       if (name == "Paths") {
         BOMPaths *paths = (BOMPaths *)lookup(tree->child);
@@ -224,54 +317,81 @@ int main(int argc, char *argv[]) {
         filenames_t filenames;
         parents_t parents;
 
-        while (paths->isLeaf == htons(0))
+        while (paths->isLeaf == htons(0)) {
           paths = (BOMPaths *)lookup(paths->indices[0].index0);
+        }
 
         while (paths) {
-          for (unsigned j = 0; j < ntohs(paths->count); j++) {
-            uint32_t index0 = paths->indices[j].index0;
-            uint32_t index1 = paths->indices[j].index1;
-
-            BOMFile *file = (BOMFile *)lookup(index1);
-            BOMPathInfo1 *info1 = (BOMPathInfo1 *)lookup(index0);
+          for (unsigned j = 0; (j < ntohs(paths->count)); j++) {
+            uint32_t index0;
+            uint32_t index1;
+            BOMFile *file;
+            BOMPathInfo1 *info1;
+            BOMPathInfo2 *info2;
             uint32_t length2;
-            BOMPathInfo2 *info2 =
-              (BOMPathInfo2 *)lookup(info1->index, &length2);
 
-            // Compute full name
+            index0 = paths->indices[j].index0;
+            index1 = paths->indices[j].index1;
+            file = (BOMFile *)lookup(index1);
+            info1 = (BOMPathInfo1 *)lookup(index0);
+            info2 = (BOMPathInfo2 *)lookup(info1->index, &length2);
+
+            // Compute full name:
             string filename = file->name;
             filenames[info1->id] = filename;
-            if (file->parent) parents[info1->id] = file->parent;
+            if (file->parent) {
+              parents[info1->id] = file->parent;
+            }
 
             parents_t::iterator it = parents.find(info1->id);
             while (it != parents.end()) {
-              filename = filenames[it->second] + "/" + filename;
+              filename = (filenames[it->second] + "/" + filename);
               it = parents.find(it->second);
             }
 
-            // Check type
+            // Check type:
             switch (info2->type) {
-            case TYPE_FILE: if (!(LIST_FILES & listType)) continue; break;
-            case TYPE_DIR: if (!(LIST_DIRS & listType)) continue; break;
-            case TYPE_LINK: if (!(LIST_LINKS & listType)) continue; break;
-            case TYPE_DEV:{
-              uint16_t mode = ntohs(info2->mode);
-              bool isBlock = mode & 0x4000;
-              if (isBlock && !(LIST_BDEVS & listType)) continue;
-              if (!isBlock && !(LIST_CDEVS & listType)) continue;
-              break;
-            }
+            case TYPE_FILE:
+                if (!(LIST_FILES & listType)) {
+                  continue;
+                }
+                break;
+            case TYPE_DIR:
+                if (!(LIST_DIRS & listType)) {
+                  continue;
+                }
+                break;
+            case TYPE_LINK:
+                if (!(LIST_LINKS & listType)) {
+                  continue;
+                }
+                break;
+            case TYPE_DEV:
+              {
+                uint16_t mode = ntohs(info2->mode);
+                bool isBlock = (mode & 0x4000);
+                if (isBlock && !(LIST_BDEVS & listType)) {
+                  continue;
+                }
+                if (!isBlock && !(LIST_CDEVS & listType)) {
+                  continue;
+                }
+                break;
+              }
             }
 
-            if (pathsOnly) cout << filename << '\n';
-            else {
-              // Print requested parameters
+            if (pathsOnly) {
+              cout << filename << '\n';
+            } else {
+              // Print requested parameters:
               bool printed = true;
-              for (unsigned j = 0; params[j]; j++) {
-                if (j && printed) cout << '\t';
+              for (unsigned jj = 0; params[jj]; jj++) {
+                if (jj && printed) {
+                  cout << '\t';
+                }
                 printed = true;
 
-                switch (params[j]) {
+                switch (params[jj]) {
                 case 'f': cout << filename; continue;
                 case 'F': cout << '"' << filename << '"'; continue;
                 case 'g': cout << dec << ntohl(info2->group); continue;
@@ -286,100 +406,117 @@ int main(int argc, char *argv[]) {
 
                 default:
                   if (!suppressDirSimModes ||
-                      (info2->type != TYPE_DIR && info2->type != TYPE_LINK))
-                    switch (params[j]) {
-                    case 'm': cout << oct << ntohs(info2->mode); continue;
-                    case 'M': error("Symbolic mode not yet supported");
+                      ((info2->type != TYPE_DIR) && (info2->type != TYPE_LINK))) {
+                    switch (params[jj]) {
+                      case 'm': cout << oct << ntohs(info2->mode); continue;
+                      case 'M': error("Symbolic mode not yet supported");
                     }
+                  }
 
-                  if (info2->type == TYPE_FILE || info2->type == TYPE_LINK)
-                    switch (params[j]) {
-                    case 't': cout << dec << ntohl(info2->modtime); continue;
-                    case 'T': error("Formated mod time not yet supported");
-                    case 'c': cout << dec << ntohl(info2->checksum); continue;
+                  if ((info2->type == TYPE_FILE) || (info2->type == TYPE_LINK)) {
+                    switch (params[jj]) {
+                      case 't': cout << dec << ntohl(info2->modtime); continue;
+                      case 'T': error("Formated mod time not yet supported");
+                      case 'c': cout << dec << ntohl(info2->checksum); continue;
                     }
+                  }
 
-                  if (info2->type != TYPE_DIR &&
-                      (!suppressDevSize || info2->type != TYPE_DEV))
-                    switch (params[j]) {
-                    case 's': cout << dec << ntohl(info2->size); continue;
-                    case 'S': error("Formated size not yet supported");
+                  if ((info2->type != TYPE_DIR) &&
+                      (!suppressDevSize || (info2->type != TYPE_DEV))) {
+                    switch (params[jj]) {
+                      case 's': cout << dec << ntohl(info2->size); continue;
+                      case 'S': error("Formated size not yet supported");
                     }
+                  }
 
-                  if (info2->type == TYPE_LINK)
-                    switch (params[j]) {
-                    case 'l': cout << info2->linkName; continue;
-                    case 'L': cout << '"' << info2->linkName << '"'; continue;
+                  if (info2->type == TYPE_LINK) {
+                    switch (params[jj]) {
+                      case 'l': cout << info2->linkName; continue;
+                      case 'L': cout << '"' << info2->linkName << '"'; continue;
                     }
+                  }
 
                   if (info2->type == TYPE_DEV) {
                     uint32_t devType = ntohl(info2->devType);
 
-                    switch (params[j]) {
-                    case '0': cout << dec << devType; continue;
-                    case '1': cout << dec << (devType >> 24); continue;
-                    case '2': cout << dec << (devType & 0xff); continue;
+                    switch (params[jj]) {
+                      case '0': cout << dec << devType; continue;
+                      case '1': cout << dec << (devType >> 24); continue;
+                      case '2': cout << dec << (devType & 0xff); continue;
                     }
                   }
                 }
 
                 printed = false;
-              }
+              } // end for-loop on 'jj'
             }
             cout << '\n';
 
             DEBUG(1, "id=0x" << hex << ntohl(info1->id) << ' '
-                  << "parent=0x" << ntohl(file->parent) << ' '
-                  << "type=" << dec << (unsigned)info2->type << ' '
-                  << "unknown0=" << dec << (unsigned)info2->unknown0 << ' '
-                  << "architecture=0x" << hex << ntohs(info2->architecture)
-                  << ' '
-                  << "unknown1=" << dec << (unsigned)info2->unknown1 << ' '
-                  << "length2=" << dec << length2);
+                     << "parent=0x" << ntohl(file->parent) << ' '
+                     << "type=" << dec << (unsigned)info2->type << ' '
+                     << "unknown0=" << dec << (unsigned)info2->unknown0
+                     << ' ' << "architecture=0x" << hex
+                     << ntohs(info2->architecture) << ' ' << "unknown1="
+                     << dec << (unsigned)info2->unknown1 << ' '
+                     << "length2=" << dec << length2);
 
             if (3 < debug) {
-              for (unsigned k = 0; k < length2; k++) {
+              for (unsigned k = 0; (k < length2); k++) {
                 if (k) {
-                  if (k % 16 == 0 || k == length2 - 1) {
-                    unsigned len = k % 16;
-                    if (!len) len = 16;
+                  if (((k % 16) == 0) || (k == (length2 - 1))) {
+                    unsigned len = (k % 16);
+                    if (!len) {
+                      len = 16;
+                    }
 
                     if (len < 16) {
-                      for (unsigned l = 0; l < 16 - len; l++) cout << "     ";
+                      for (unsigned l = 0; (l < (16 - len)); l++) {
+                        cout << "     ";
+                      }
                       cout << ' ';
                     }
 
-                    for (unsigned l = k - len; l < k; l++) {
-                      if (l % 8 == 0) cout << ' ';
+                    for (unsigned l = (k - len); (l < k); l++) {
+                      if ((l % 8) == 0) {
+                        cout << ' ';
+                      }
 
                       unsigned char c = ((unsigned char *)info2)[l];
-                      if (isprint(c)) cout << (char)c;
-                      else cout << '.';
+                      if (isprint(c)) {
+                        cout << (char)c;
+                      } else {
+                        cout << '.';
+                      }
                     }
 
                     cout << '\n';
-                  } else if (k % 8 == 0) cout << ' ';
+                  } else if ((k % 8) == 0) {
+                    cout << ' ';
+                  }
                 }
 
                 cout << "0x" << setfill('0') << setw(2) << hex
                      << (unsigned)((unsigned char *)info2)[k] << ' ';
               }
             }
-          }
+          } // end for-loop on 'j'
 
-          if (paths->forward == htonl(0)) paths = 0;
-          else paths = (BOMPaths *)lookup(paths->forward);
+          if (paths->forward == htonl(0)) {
+            paths = 0;
+          } else {
+            paths = (BOMPaths *)lookup(paths->forward);
+          }
         }
       }
 
-      ptr += sizeof(BOMVar) + var->length;
-    }
-  }
+      ptr += (sizeof(BOMVar) + var->length);
+    } // end for-loop on 'ii'
+  } // end for-loop on 'i'
 
   cout << flush;
 
   return 0;
 }
 
-
-// 0
+// EOF

@@ -1,3 +1,10 @@
 TODO:
 
 * fix crash when called on a non-existing file
+* the system lsbom(1) is implemented in plain-C, add a plain-C version of
+  this implementation too
+* Right now this repo has only been working on re-implementing the lsbom
+  executable itself, but ideally it should re-implement the entire
+  Bom.framework from /System/Library/PrivateFrameworks
+* lsbom needs to support '--help' and '--version' before we can move to
+  gnits strictness with automake; this will require a move to getopt_long()

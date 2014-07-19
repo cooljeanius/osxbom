@@ -10,3 +10,7 @@ config.h
 Makefile
 Makefile.orig
 *.status
+*deps/*.*o
+osxbom-*.*.*/*
+*.tar.gz
+*(Autosaved)*

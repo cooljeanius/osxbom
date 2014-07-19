@@ -8,4 +8,4 @@ $(NAME): $(NAME).cpp bom.h
 	$(CXX) -o $@ $< -I. -Wall -Werror
 
 clean:
-	@RM@ -f $(NAME) $(NAME).o
+	@RM_PROG@ -f $(NAME) $(NAME).o

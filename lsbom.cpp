@@ -1,3 +1,4 @@
+// lsbom.cpp
 // This code implements a clone of the NextSTEP/OSX lsbom utility
 //
 // Initial code
@@ -12,6 +13,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // This program is in the public domain.
+//
 
 #include "bom.h"
 
@@ -20,11 +22,11 @@
 #include <fstream>
 #include <map>
 
-// NOTE: Windows does not have several of these headers
+// NOTE: Windows is missing several of these headers:
 #include <string.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
-#include <unistd.h> // For getopt
+#include <unistd.h> // For getopt() on some platforms
 #include <ctype.h>
 
 using namespace std;
@@ -65,7 +67,7 @@ void short_usage() {
        << "\t"
 #if 0
     "[--arch archVal] "
-#endif
+#endif // 0
     "[-p parameters] bom ..." << endl;
 }
 
@@ -92,7 +94,7 @@ void usage() {
 #if 0
     "\t--arch archVal  print info for architecture archVal (\"ppc\", "
     "\"i386\", \"hppa\", \"sparc\", etc)\n"
-#endif
+#endif // 0
     "\t-p parameters   print only some of the results.  EACH OPTION CAN "
     "ONLY BE USED ONCE\n"
     "\t\tParameters:\n"
@@ -379,3 +381,5 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+
+// 0

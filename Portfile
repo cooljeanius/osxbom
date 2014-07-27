@@ -43,7 +43,7 @@ destroot {
         xinstall ${worksrcpath}/bom.h ${destroot}${prefix}/include
 }
 
-variant rename description {Prevent osxbom from shadowing the system lsbom} {
+variant rename description {Stop osxbom from shadowing the system lsbom} {
     destroot {
         xinstall ${worksrcpath}/lsbom ${destroot}${prefix}/bin/${name}
         xinstall -d ${destroot}${prefix}/include/${name}
@@ -55,12 +55,17 @@ default_variants    +rename
 
 variant egallager description {Use my GitHub fork for the source} {
     PortGroup                github 1.0
-    github.setup             cooljeanius ${name} ${version}
+    # My repo is ahead of the main one in terms of versions:
+    github.setup             cooljeanius ${name} 0.0.4
+    #FIXME: just fetch from the tag instead of doing this:
     fetch.type 	             git
     git.url 	             git://github.com/cooljeanius/${name}.git
+    # probably not actually necessary to autoreconf, but whatever:
     use_autoreconf           yes
-    use_configure            yes
     autoreconf.args          -fvi -Wall
+    # override the previous setting:
+    use_configure            yes
+    # for trace mode:
     depends_build-append     port:gawk \
                              port:grep
 }

@@ -2,7 +2,7 @@ dnl#                                               -*- Autoconf -*-
 dnl# Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.61])dnl
-AC_INIT([osxbom],[0.0.3],[])dnl
+AC_INIT([osxbom],[0.0.4],[])dnl
 AC_CONFIG_SRCDIR([bom.h])dnl
 AC_CONFIG_HEADER([config.h])dnl
 

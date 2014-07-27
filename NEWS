@@ -1,5 +1,6 @@
 Tue Mar 5 01:42:05 EST 2013 - Hello World!
 
+0.0.4: new tag; seemed like I was at a good stopping spot...
 0.0.3: version number chosen by applying semantic versioning principles
        to the svn revision from which this project was originally pulled.
        See http://semver.org/ for more info.

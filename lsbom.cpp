@@ -74,13 +74,13 @@ using namespace std;
     cout << "DEBUG(" << level << "): " << msg << endl;                  \
   }
 
-enum {
+enum list_type_e {
   LIST_FILES = 1 << 0,
   LIST_DIRS  = 1 << 1,
   LIST_LINKS = 1 << 2,
   LIST_BDEVS = 1 << 3,
   LIST_CDEVS = 1 << 4,
-  LIST_ALL = 0x1f,
+  LIST_ALL = 0x1f
 };
 
 
@@ -88,14 +88,14 @@ static int debug = 0;
 static char *data;
 static BOMIndexHeader *indexHeader;
 
-char *lookup(int i, uint32_t *length = 0) {
-  BOMIndex *index = (indexHeader->index + ntohl(i));
+char *lookup(int i, uint32_t *length = (uint32_t *)NULL) {
+  BOMIndex *index = (indexHeader->index + (int)ntohl((uint32_t)i));
   if (length) {
     *length = ntohl(index->length);
   }
   uint32_t addr = ntohl(index->address);
 
-  DEBUG(2, "@ index=0x" << hex << ntohl(i)
+  DEBUG(2, "@ index=0x" << hex << ntohl((uint32_t)i)
            << " addr=0x" << hex << setw(4) << setfill('0') << addr
            << " len=" << dec << ntohl(index->length));
 
@@ -203,9 +203,18 @@ int main(int argc, char *argv[]) {
   int listType = 0;
   char params[16] = "";
 
+  ios_base::Init *__ioinit = new ios_base::Init;
+
+  /* FIXME: see comment below: */
+  if (strncmp(argv[1], "--help", 8UL) == 0) {
+    usage(); return 0;
+  } else if (strncmp(argv[1], "--version", 16UL) == 0) {
+    version(); return 0;
+  }
+
   while (true) {
     // FIXME: switch to getopt_long():
-    char c = getopt(argc, argv, "hsfdlbcmxvp:D::");
+    char c = (char)getopt(argc, argv, "hsfdlbcmxvp:D::");
     if (c == -1) {
       break;
     } else {
@@ -249,6 +258,7 @@ int main(int argc, char *argv[]) {
           }
         }
       case '-': continue;
+      default:;
     }
   }
 
@@ -298,11 +308,11 @@ int main(int argc, char *argv[]) {
     // Process vars:
     BOMVars *vars = (BOMVars *)(data + ntohl(header->varsOffset));
     char *ptr = (char *)vars->first;
-    for (unsigned ii = 0; (ii < ntohl(vars->count)); (ii++)) {
+    for (unsigned int ii = 0U; (ii < ntohl(vars->count)); (ii++)) {
       BOMVar *var = (BOMVar *)ptr;
 
       uint32_t varDataLength;
-      char *varData = lookup(var->index, &varDataLength);
+      char *varData = lookup((int)var->index, &varDataLength);
       BOMTree *tree = (BOMTree *)varData;
       string name = string(var->name, var->length);
 
@@ -310,7 +320,7 @@ int main(int argc, char *argv[]) {
                << ':');
 
       if (name == "Paths") {
-        BOMPaths *paths = (BOMPaths *)lookup(tree->child);
+        BOMPaths *paths = (BOMPaths *)lookup((int)tree->child);
 
         typedef map<uint32_t, string> filenames_t;
         typedef map<uint32_t, uint32_t> parents_t;
@@ -318,11 +328,11 @@ int main(int argc, char *argv[]) {
         parents_t parents;
 
         while (paths->isLeaf == htons(0)) {
-          paths = (BOMPaths *)lookup(paths->indices[0].index0);
+          paths = (BOMPaths *)lookup((int)paths->indices[0].index0);
         }
 
         while (paths) {
-          for (unsigned j = 0; (j < ntohs(paths->count)); j++) {
+          for (unsigned int j = 0U; (j < ntohs(paths->count)); j++) {
             uint32_t index0;
             uint32_t index1;
             BOMFile *file;
@@ -332,9 +342,9 @@ int main(int argc, char *argv[]) {
 
             index0 = paths->indices[j].index0;
             index1 = paths->indices[j].index1;
-            file = (BOMFile *)lookup(index1);
-            info1 = (BOMPathInfo1 *)lookup(index0);
-            info2 = (BOMPathInfo2 *)lookup(info1->index, &length2);
+            file = (BOMFile *)lookup((int)index1);
+            info1 = (BOMPathInfo1 *)lookup((int)index0);
+            info2 = (BOMPathInfo2 *)lookup((int)info1->index, &length2);
 
             // Compute full name:
             string filename = file->name;
@@ -378,6 +388,8 @@ int main(int argc, char *argv[]) {
                 }
                 break;
               }
+            default:
+                break;
             }
 
             if (pathsOnly) {
@@ -410,6 +422,7 @@ int main(int argc, char *argv[]) {
                     switch (params[jj]) {
                       case 'm': cout << oct << ntohs(info2->mode); continue;
                       case 'M': error("Symbolic mode not yet supported");
+                      default:;
                     }
                   }
 
@@ -418,6 +431,7 @@ int main(int argc, char *argv[]) {
                       case 't': cout << dec << ntohl(info2->modtime); continue;
                       case 'T': error("Formated mod time not yet supported");
                       case 'c': cout << dec << ntohl(info2->checksum); continue;
+                      default:;
                     }
                   }
 
@@ -426,6 +440,7 @@ int main(int argc, char *argv[]) {
                     switch (params[jj]) {
                       case 's': cout << dec << ntohl(info2->size); continue;
                       case 'S': error("Formated size not yet supported");
+                      default:;
                     }
                   }
 
@@ -433,6 +448,7 @@ int main(int argc, char *argv[]) {
                     switch (params[jj]) {
                       case 'l': cout << info2->linkName; continue;
                       case 'L': cout << '"' << info2->linkName << '"'; continue;
+                      default:;
                     }
                   }
 
@@ -443,6 +459,7 @@ int main(int argc, char *argv[]) {
                       case '0': cout << dec << devType; continue;
                       case '1': cout << dec << (devType >> 24); continue;
                       case '2': cout << dec << (devType & 0xff); continue;
+                      default:;
                     }
                   }
                 }
@@ -462,22 +479,22 @@ int main(int argc, char *argv[]) {
                      << "length2=" << dec << length2);
 
             if (3 < debug) {
-              for (unsigned k = 0; (k < length2); k++) {
+              for (unsigned int k = 0U; (k < length2); k++) {
                 if (k) {
                   if (((k % 16) == 0) || (k == (length2 - 1))) {
-                    unsigned len = (k % 16);
+                    unsigned int len = (k % 16);
                     if (!len) {
                       len = 16;
                     }
 
                     if (len < 16) {
-                      for (unsigned l = 0; (l < (16 - len)); l++) {
+                      for (unsigned int l = 0U; (l < (16 - len)); l++) {
                         cout << "     ";
                       }
                       cout << ' ';
                     }
 
-                    for (unsigned l = (k - len); (l < k); l++) {
+                    for (unsigned int l = (k - len); (l < k); l++) {
                       if ((l % 8) == 0) {
                         cout << ' ';
                       }
@@ -497,15 +514,15 @@ int main(int argc, char *argv[]) {
                 }
 
                 cout << "0x" << setfill('0') << setw(2) << hex
-                     << (unsigned)((unsigned char *)info2)[k] << ' ';
+                     << (unsigned int)((unsigned char *)info2)[k] << ' ';
               }
             }
           } // end for-loop on 'j'
 
           if (paths->forward == htonl(0)) {
-            paths = 0;
+            paths = (BOMPaths *)NULL;
           } else {
-            paths = (BOMPaths *)lookup(paths->forward);
+            paths = (BOMPaths *)lookup((int)paths->forward);
           }
         }
       }
@@ -515,6 +532,8 @@ int main(int argc, char *argv[]) {
   } // end for-loop on 'i'
 
   cout << flush;
+
+  delete __ioinit;
 
   return 0;
 }

@@ -22,6 +22,10 @@
 
 #include <stdint.h>
 
+#ifndef FLEXIBLE_ARRAY_MEMBER
+# define FLEXIBLE_ARRAY_MEMBER 0
+#endif /* !FLEXIBLE_ARRAY_MEMBER */
+
 struct BOMHeader {
   char magic[8]; // = BOMStore
   uint32_t unknown0; // = 1?
@@ -41,7 +45,7 @@ struct BOMIndex {
 
 struct BOMIndexHeader {
   uint32_t unknown0; // FIXME: What is this? It is not the length of the array...
-  BOMIndex index[];
+  BOMIndex index[FLEXIBLE_ARRAY_MEMBER];
 } __attribute__((packed));
 
 
@@ -58,13 +62,13 @@ struct BOMTree { // 21 bytes
 struct BOMVar {
   uint32_t index;
   uint8_t length;
-  char name[]; // length
+  char name[FLEXIBLE_ARRAY_MEMBER]; // length
 } __attribute__((packed));
 
 
 struct BOMVars {
   uint32_t count; // Number of entries that follow
-  BOMVar first[];
+  BOMVar first[FLEXIBLE_ARRAY_MEMBER];
 } __attribute__((packed));
 
 
@@ -79,7 +83,7 @@ struct BOMPaths {
   uint16_t count;  // for leaf, count of paths. for top level, (# of leafs - 1)
   uint32_t forward;  // next leaf, when there are multiple leafs
   uint32_t backward; // previous leaf, when there are multiple leafs
-  BOMPathIndices indices[];
+  BOMPathIndices indices[FLEXIBLE_ARRAY_MEMBER];
 } __attribute__((packed));
 
 
@@ -87,7 +91,7 @@ enum {
   TYPE_FILE = 1, // BOMPathInfo2 is exe=88 regular=35 bytes
   TYPE_DIR  = 2, // BOMPathInfo2 is 31 bytes
   TYPE_LINK = 3, // BOMPathInfo2 is 44? bytes
-  TYPE_DEV  = 4, // BOMPathInfo2 is 35 bytes
+  TYPE_DEV  = 4  // BOMPathInfo2 is 35 bytes
 };
 
 
@@ -96,7 +100,7 @@ enum {
   ARCH_PPC = 0,
   ARCH_I386 = 1 << 12,
   ARCH_HPPA = 0,
-  ARCH_SPARC = 0,
+  ARCH_SPARC = 0
 };
 
 
@@ -115,7 +119,7 @@ struct BOMPathInfo2 {
     uint32_t devType;
   };
   uint32_t linkNameLength;
-  char linkName[];
+  char linkName[FLEXIBLE_ARRAY_MEMBER];
 
   // FIXME: executable files have a buch of other crap here:
 } __attribute__((packed));
@@ -129,7 +133,7 @@ struct BOMPathInfo1 {
 
 struct BOMFile {
   uint32_t parent; // Parent BOMPathInfo1->id
-  char name[];
+  char name[FLEXIBLE_ARRAY_MEMBER];
 } __attribute__((packed));
 
 // prototypes:

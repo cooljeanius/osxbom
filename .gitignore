@@ -6,7 +6,9 @@ stamp-h*
 *.o
 lsbom
 *~
+confdefs.h
 config.h
+conftest*
 Makefile
 Makefile.orig
 Makefile_orig

@@ -9,7 +9,8 @@ bin_PROGRAMS = $(NAME)
 lsbom_SOURCES = lsbom.cpp bom.h
 lsbom_CPPFLAGS = -I.
 lsbom_CFLAGS = -Wall -Wextra @MAINT@ -Werror
-lsbom_CXXFLAGS = -Wall -Wextra -Wformat=2 -Wundef -Winvalid-pch -Wshadow @MAINT@ -Wlogical-op -Wc++11-compat -Wuseless-cast -Waggregate-return -Wconversion -Wsign-conversion -Wmissing-declarations -Wzero-as-null-pointer-constant -pedantic -std=gnu++98
+lsbom_CXXFLAGS = -Wall -Wextra -Wformat=2 -Wundef -Winvalid-pch -Wshadow -Wswitch @MAINT@ -Wlogical-op -Wc++11-compat -Wuseless-cast -Waggregate-return -Wconversion -Wsign-conversion -Wmissing-declarations -Wswitch-default -Wzero-as-null-pointer-constant -pedantic -std=gnu++98
+##FIXME: check which warning flags are supported in the configure script
 
 noinst_HEADERS = bom.h
 
@@ -34,6 +35,7 @@ distclean-local: clean-local
 	@RM_PROG@ -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
 	@RM_PROG@ -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.zip
 	@RM_PROG@ -rfv autom4te.cache || rmdir autom4te.cache
+	@RM_PROG@ -rfv *.dSYM || rmdir *.dSYM
 	if test -d build; then \
 	  @RM_PROG@ -rfv build || rmdir build; \
 	elif test -d ${srcdir}/build; then \

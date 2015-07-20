@@ -4,11 +4,12 @@ dnl# Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.61])dnl
 AC_INIT([osxbom],[0.0.4],[])dnl
 AC_CONFIG_SRCDIR([bom.h])dnl
+AC_CONFIG_AUX_DIR([build-aux])dnl
 AC_CONFIG_HEADER([config.h])dnl
 
 dnl# Set up Automake.
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([1.10 gnu dist-zip])dnl
+AM_INIT_AUTOMAKE([1.11.6 gnits dist-zip])dnl
 AM_MAINTAINER_MODE
 
 # Checks for programs.
@@ -36,6 +37,7 @@ AC_CHECK_HEADERS([arpa/inet.h ctype.h getopt.h mach-o/arch.h stdio.h])dnl
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 AC_C_CONST
+AC_C_FLEXIBLE_ARRAY_MEMBER
 AC_C_PROTOTYPES
 AC_TYPE_UINT8_T
 AC_TYPE_UINT16_T

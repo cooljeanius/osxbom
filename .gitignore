@@ -31,3 +31,7 @@ osxbom-*.*.*/*
 *.hmap
 *.build
 build/*
+*.xcworkspacedata
+*/xcuserdata/*
+*.xcuserdatad
+*.xcuserstate

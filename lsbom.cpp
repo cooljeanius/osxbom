@@ -220,9 +220,9 @@ int main(int argc, char *argv[]) {
 
   /* FIXME: see comment below: */
   if (strncmp(argv[1], "--help", 8UL) == 0) {
-    usage(); return 0;
+    delete __ioinit; usage(); return 0;
   } else if (strncmp(argv[1], "--version", 16UL) == 0) {
-    version(); return 0;
+    delete __ioinit; version(); return 0;
   }
 
   while (true) {
@@ -249,7 +249,9 @@ int main(int argc, char *argv[]) {
       case 'v': version(); exit(0); break;
       case 'a': usage_error("--arch not supported");
       case 'p':
-        if (15 < strlen(optarg)) {
+        if (optarg == NULL) {
+          usage_error("NULL optarg");
+        } else if (15 < strlen(optarg)) {
           usage_error("Too many parameters");
         }
         strcpy(params, optarg);
@@ -304,6 +306,7 @@ int main(int argc, char *argv[]) {
     f.read(data, length);
 
     if (f.fail()) {
+      delete __ioinit;
       cerr << "Failed to read BOM file" << endl;
       return 1;
     }
@@ -313,6 +316,7 @@ int main(int argc, char *argv[]) {
     BOMHeader *header = (BOMHeader *)data;
 
     if (string(header->magic, 8) != "BOMStore") {
+      delete __ioinit;
       cerr << "Not a BOM file: " << argv[i] << endl;
       return 1;
     }

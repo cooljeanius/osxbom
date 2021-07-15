@@ -374,10 +374,10 @@ dist_doc_DATA = README
 DISTCLEANFILES = *~ autoscan.log gdb.log .DS_Store @MAINT@ lsbom.8
 EXTRA_DIST = test.bom Portfile TODO Makefile_orig_hardcoded \
 	osxbom.xcodeproj/project.pbxproj osxbom.1 lsbom.8 \
-	English.lproj/lsbom.strings expected_results_for_test_bom.txt \
+	en.lproj/lsbom.strings expected_results_for_test_bom.txt \
 	lsbom_disasm.s lsbom_disasm_annot.s
-MAINTAINERCLEANFILES = configure.scan English.lproj/lsbom.strings \
-	lsbom.8 lsbom_disasm.s lsbom_disasm_annot.s
+MAINTAINERCLEANFILES = configure.scan en.lproj/lsbom.strings lsbom.8 \
+	lsbom_disasm.s lsbom_disasm_annot.s
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -1050,7 +1050,7 @@ check-local: ./$(NAME) ${srcdir}/test.bom
 	./$(NAME) ${srcdir}/test.bom
 .PHONY: check-local
 
-English.lproj/lsbom.strings:
+en.lproj/lsbom.strings:
 	if test -x /usr/bin/lsbom; then strings /usr/bin/lsbom | tee $@; fi
 
 configure.scan:

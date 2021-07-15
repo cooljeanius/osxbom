@@ -51,12 +51,12 @@ check-local: ./$(NAME) ${srcdir}/test.bom
 	./$(NAME) ${srcdir}/test.bom
 .PHONY: check-local
 
-EXTRA_DIST += English.lproj/lsbom.strings expected_results_for_test_bom.txt
+EXTRA_DIST += en.lproj/lsbom.strings expected_results_for_test_bom.txt
 
-English.lproj/lsbom.strings:
+en.lproj/lsbom.strings:
 	if test -x /usr/bin/lsbom; then strings /usr/bin/lsbom | tee $@; fi
 
-MAINTAINERCLEANFILES = configure.scan English.lproj/lsbom.strings lsbom.8
+MAINTAINERCLEANFILES = configure.scan en.lproj/lsbom.strings lsbom.8
 
 configure.scan:
 	autoscan || touch configure.scan

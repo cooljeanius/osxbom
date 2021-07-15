@@ -5,7 +5,7 @@ AC_PREREQ([2.61])dnl
 AC_INIT([osxbom],[0.0.4],[])dnl
 AC_CONFIG_SRCDIR([bom.h])dnl
 AC_CONFIG_AUX_DIR([build-aux])dnl
-AC_CONFIG_HEADER([config.h])dnl
+AC_CONFIG_HEADERS([config.h])dnl
 
 dnl# Set up Automake.
 AC_CANONICAL_TARGET
@@ -32,7 +32,20 @@ AC_DEFUN([AC_REQUIRE_HEADER_STDC],[
 ])dnl
 AC_REQUIRE_HEADER_STDC
 AC_HEADER_STDBOOL dnl# also "_CHECK"s it
-AC_CHECK_HEADERS([arpa/inet.h ctype.h getopt.h mach-o/arch.h stdio.h])dnl
+AC_CHECK_HEADERS([arpa/inet.h ctype.h getopt.h mach-o/arch.h])dnl
+
+if test "x${ac_cv_header_stdint_h}" = "x"; then
+  test -z "${ac_cv_header_stdint_h}"
+  AC_CHECK_HEADERS([stdint.h])
+fi
+if test "x${ac_cv_header_stdio_h}" = "x"; then
+  test -z "${ac_cv_header_stdio_h}"
+  AC_CHECK_HEADERS([stdio.h])
+fi
+if test "x${ac_cv_header_unistd_h}" = "x"; then
+  test -z "${ac_cv_header_unistd_h}"
+  AC_CHECK_HEADERS([unistd.h])
+fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN

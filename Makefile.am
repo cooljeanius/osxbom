@@ -9,7 +9,7 @@ bin_PROGRAMS = $(NAME)
 lsbom_SOURCES = lsbom.cpp bom.h
 lsbom_CPPFLAGS = -I.
 lsbom_CFLAGS = -Wall -Wextra @MAINT@ -Werror
-lsbom_CXXFLAGS = -Wall -Wextra -Wformat=2 -Wundef -Winvalid-pch -Wshadow -Wswitch -Wmissing-noreturn @MAINT@ -Wlogical-op -Wc++11-compat -Wuseless-cast -Waggregate-return -Wconversion -Wsign-conversion -Wmissing-declarations -Wswitch-default -Wzero-as-null-pointer-constant -pedantic -std=gnu++98
+lsbom_CXXFLAGS = -std=gnu++98 -Wall -Wextra -Wformat=2 -Wundef -Winvalid-pch -Wshadow -Wswitch -Wmissing-noreturn @MAINT@ -Wlogical-op -Wc++11-compat -Wuseless-cast -Waggregate-return -Wconversion -Wsign-conversion -Wmissing-declarations -Wswitch-default -Wzero-as-null-pointer-constant -pedantic
 ##FIXME: check which warning flags are supported in the configure script
 
 noinst_HEADERS = bom.h

@@ -36,3 +36,4 @@ build/*
 *.xcuserdatad
 *.xcuserstate
 work
+.env.local

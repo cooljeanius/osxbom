@@ -2,7 +2,6 @@ language: cpp
 os:
   - linux
   - osx
-  - freebsd
 dist: xenial
 
 # try to build:

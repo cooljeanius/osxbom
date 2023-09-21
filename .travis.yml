@@ -1,4 +1,9 @@
 language: cpp
+os:
+  - linux
+  - osx
+  - freebsd
+dist: xenial
 
 # try to build:
 script: ./configure && make && make check && make distcheck

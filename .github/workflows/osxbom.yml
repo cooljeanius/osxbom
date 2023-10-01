@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: checkout
-      uses: actions/checkout@v4.0.0
+      uses: actions/checkout@v4.1.0
 #     # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are currently unsupported
 #     # 'compiler' was not transformed because there is no suitable equivalent in GitHub Actions
     - run: "./configure && make && make check && make distcheck"

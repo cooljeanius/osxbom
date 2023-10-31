@@ -1,11 +1,10 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
-# $Id$
 
 PortSystem          1.0
 
 name                osxbom
 categories          sysutils
-maintainers         gwmail.gwu.edu:egall openmaintainer
+maintainers         {gwmail.gwu.edu:egall @cooljeanius} openmaintainer
 platforms           darwin
 license             public-domain
 
@@ -55,11 +54,12 @@ default_variants    +rename
 
 variant egallager description {Use my GitHub fork for the source} {
     PortGroup                github 1.0
+
     # My repo is ahead of the main one in terms of versions:
     github.setup             cooljeanius ${name} 0.0.5
     #FIXME: just fetch from the tag instead of doing this:
-    fetch.type 	             git
-    git.url 	             git://github.com/cooljeanius/${name}.git
+    fetch.type               git
+    git.url                  git://github.com/cooljeanius/${name}.git
     # probably not actually necessary to autoreconf, but whatever:
     use_autoreconf           yes
     autoreconf.args          -fvi -Wall

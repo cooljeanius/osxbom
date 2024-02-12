@@ -16,12 +16,12 @@ jobs:
 #     # 'compiler' was not transformed because there is no suitable equivalent in GitHub Actions
     - run: "./configure && make && make check && make distcheck"
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.3.0
+      uses: actions/upload-artifact@v4.3.1
       with:
         name: osxbom-gzipped_tarfile-${{ matrix.compiler }}-${{ matrix.os }}
         path: osxbom-0.0.*.tar.gz
     - name: Upload another Build Artifact
-      uses: actions/upload-artifact@v4.3.0
+      uses: actions/upload-artifact@v4.3.1
       with:
         name: osxbom-zipfile-${{ matrix.compiler }}-${{ matrix.os }}
         path: osxbom-0.0.*.zip

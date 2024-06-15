@@ -371,7 +371,7 @@ lsbom_CXXFLAGS = -std=gnu++98 -Wall -Wextra -Wformat=2 -Wundef -Winvalid-pch -Ws
 noinst_HEADERS = bom.h
 man_MANS = osxbom.1 lsbom.8
 dist_doc_DATA = README
-DISTCLEANFILES = *~ autoscan.log gdb.log .DS_Store @MAINT@ lsbom.8
+DISTCLEANFILES = *~ autoscan.log gdb.log .DS_Store out.txt @MAINT@ lsbom.8
 EXTRA_DIST = test.bom Portfile TODO Makefile_orig_hardcoded \
 	osxbom.xcodeproj/project.pbxproj osxbom.1 lsbom.8 \
 	en.lproj/lsbom.strings expected_results_for_test_bom.txt \
@@ -1046,7 +1046,8 @@ distclean-local: clean-local
 .PHONY: distclean-local
 
 check-local: ./$(NAME) ${srcdir}/test.bom
-	./$(NAME) ${srcdir}/test.bom
+	./$(NAME) >/dev/null
+	./$(NAME) ${srcdir}/test.bom | tee out.txt
 .PHONY: check-local
 
 en.lproj/lsbom.strings:

@@ -219,7 +219,7 @@ int main(int argc, char *argv[]) {
   ios_base::Init *__ioinit = new ios_base::Init;
 
   /* FIXME: see comment below: */
-  if (strncmp(argv[1], "--help", 8UL) == 0) {
+  if ((argv == NULL) || (argv[1] == NULL) || (strncmp(argv[1], "--help", 8UL) == 0)) {
     delete __ioinit; usage(); return 0;
   } else if (strncmp(argv[1], "--version", 16UL) == 0) {
     delete __ioinit; version(); return 0;

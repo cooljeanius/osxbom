@@ -7,7 +7,7 @@
 #undef CXX_NO_MINUS_C_MINUS_O
 
 /* Define to nothing if C supports flexible array members, and to 1 if it does
-   not. That way, with a declaration like `struct s { int n; double
+   not. That way, with a declaration like 'struct s { int n; double
    d[FLEXIBLE_ARRAY_MEMBER]; };', the struct hack can be used with pre-C99
    compilers. When computing the size of such an object, don't use 'sizeof
    (struct s)' as it overestimates the size. Use 'offsetof (struct s, d)'
@@ -18,90 +18,90 @@
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
 
-/* Define to 1 if you have the `atoi' function. */
+/* Define to 1 if you have the 'atoi' function. */
 #undef HAVE_ATOI
 
-/* Define to 1 if you have the `cerr' function. */
+/* Define to 1 if you have the 'cerr' function. */
 #undef HAVE_CERR
 
-/* Define to 1 if you have the `close' function. */
+/* Define to 1 if you have the 'close' function. */
 #undef HAVE_CLOSE
 
-/* Define to 1 if you have the `cout' function. */
+/* Define to 1 if you have the 'cout' function. */
 #undef HAVE_COUT
 
 /* Define to 1 if you have the <ctype.h> header file. */
 #undef HAVE_CTYPE_H
 
-/* Define to 1 if you have the declaration of `ntohl', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'ntohl', and to 0 if you don't.
    */
 #undef HAVE_DECL_NTOHL
 
-/* Define to 1 if you have the declaration of `ntohs', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'ntohs', and to 0 if you don't.
    */
 #undef HAVE_DECL_NTOHS
 
-/* Define to 1 if you have the `exit' function. */
+/* Define to 1 if you have the 'exit' function. */
 #undef HAVE_EXIT
 
-/* Define to 1 if you have the `fflush' function. */
+/* Define to 1 if you have the 'fflush' function. */
 #undef HAVE_FFLUSH
 
-/* Define to 1 if you have the `fprintf' function. */
+/* Define to 1 if you have the 'fprintf' function. */
 #undef HAVE_FPRINTF
 
-/* Define to 1 if you have the `fwrite' function. */
+/* Define to 1 if you have the 'fwrite' function. */
 #undef HAVE_FWRITE
 
-/* Define to 1 if you have the `getopt' function. */
+/* Define to 1 if you have the 'getopt' function. */
 #undef HAVE_GETOPT
 
 /* Define to 1 if you have the <getopt.h> header file. */
 #undef HAVE_GETOPT_H
 
-/* Define to 1 if you have the `getopt_long' function. */
+/* Define to 1 if you have the 'getopt_long' function. */
 #undef HAVE_GETOPT_LONG
 
-/* Define to 1 if you have the `getopt_long_only' function. */
+/* Define to 1 if you have the 'getopt_long_only' function. */
 #undef HAVE_GETOPT_LONG_ONLY
 
-/* Define to 1 if you have the `getprogname' function. */
+/* Define to 1 if you have the 'getprogname' function. */
 #undef HAVE_GETPROGNAME
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `isprint' function. */
+/* Define to 1 if you have the 'isprint' function. */
 #undef HAVE_ISPRINT
 
 /* Define to 1 if you have the <mach-o/arch.h> header file. */
 #undef HAVE_MACH_O_ARCH_H
 
-/* Define to 1 if you have the `ntohl' function. */
+/* Define to 1 if you have the 'ntohl' function. */
 #undef HAVE_NTOHL
 
-/* Define to 1 if you have the `ntohs' function. */
+/* Define to 1 if you have the 'ntohs' function. */
 #undef HAVE_NTOHS
 
-/* Define to 1 if the system has the type `NXArchInfo'. */
+/* Define to 1 if the system has the type 'NXArchInfo'. */
 #undef HAVE_NXARCHINFO
 
-/* Define to 1 if you have the `NXGetArchInfoFromName' function. */
+/* Define to 1 if you have the 'NXGetArchInfoFromName' function. */
 #undef HAVE_NXGETARCHINFOFROMNAME
 
-/* Define to 1 if you have the `printf' function. */
+/* Define to 1 if you have the 'printf' function. */
 #undef HAVE_PRINTF
 
-/* Define to 1 if you have the `puts' function. */
+/* Define to 1 if you have the 'puts' function. */
 #undef HAVE_PUTS
 
-/* Define to 1 if you have the `read' function. */
+/* Define to 1 if you have the 'read' function. */
 #undef HAVE_READ
 
-/* Define to 1 if you have the `setfill' function. */
+/* Define to 1 if you have the 'setfill' function. */
 #undef HAVE_SETFILL
 
-/* Define to 1 if you have the `setw' function. */
+/* Define to 1 if you have the 'setw' function. */
 #undef HAVE_SETW
 
 /* Define to 1 if stdbool.h conforms to C99. */
@@ -116,10 +116,10 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
-/* Define to 1 if you have the `strcmp' function. */
+/* Define to 1 if you have the 'strcmp' function. */
 #undef HAVE_STRCMP
 
-/* Define to 1 if you have the `strcpy' function. */
+/* Define to 1 if you have the 'strcpy' function. */
 #undef HAVE_STRCPY
 
 /* Define to 1 if you have the <strings.h> header file. */
@@ -128,7 +128,7 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define to 1 if you have the `strlen' function. */
+/* Define to 1 if you have the 'strlen' function. */
 #undef HAVE_STRLEN
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
@@ -140,10 +140,10 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define to 1 if you have the `what' function. */
+/* Define to 1 if you have the 'what' function. */
 #undef HAVE_WHAT
 
-/* Define to 1 if the system has the type `_Bool'. */
+/* Define to 1 if the system has the type '_Bool'. */
 #undef HAVE__BOOL
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
@@ -173,7 +173,7 @@
 /* Define to 1 if the C compiler supports function prototypes. */
 #undef PROTOTYPES
 
-/* Define to 1 if all of the C90 standard headers exist (not just the ones
+/* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
@@ -206,7 +206,7 @@
 /* Define like PROTOTYPES; this can be used by system headers. */
 #undef __PROTOTYPES
 
-/* Define to empty if `const' does not conform to ANSI C. */
+/* Define to empty if 'const' does not conform to ANSI C. */
 #undef const
 
 /* Define to the type of an unsigned integer type of width exactly 16 bits if

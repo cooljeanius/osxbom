@@ -1,7 +1,7 @@
 dnl#                                               -*- Autoconf -*-
 dnl# Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.61])dnl
+AC_PREREQ([2.72])dnl
 AC_INIT([osxbom],[0.0.5],[https://github.com/cooljeanius/osxbom/issues])dnl
 AC_CONFIG_SRCDIR([bom.h])dnl
 AC_CONFIG_AUX_DIR([build-aux])dnl
@@ -28,7 +28,12 @@ AC_SUBST([ROFF_PROG])dnl
 
 # Checks for header files.
 AC_DEFUN([AC_REQUIRE_HEADER_STDC],[
-  AC_REQUIRE([AC_HEADER_STDC])dnl
+  m4_ifdef([AC_HEADER_STDC],[
+    AC_REQUIRE([AC_HEADER_STDC])dnl
+  ],[
+    AC_REQUIRE([AC_CHECK_INCLUDES_DEFAULT])dnl
+    AC_REQUIRE([AC_PROG_EGREP])dnl
+  ])dnl
 ])dnl
 AC_REQUIRE_HEADER_STDC
 AC_HEADER_STDBOOL dnl# also "_CHECK"s it

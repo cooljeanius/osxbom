@@ -37,3 +37,4 @@ build/*
 *.xcuserstate
 work
 .env.local
+out.txt

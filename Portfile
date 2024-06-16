@@ -56,7 +56,7 @@ variant egallager description {Use my GitHub fork for the source} {
     PortGroup                github 1.0
 
     # My repo is ahead of the main one in terms of versions:
-    github.setup             cooljeanius ${name} 0.0.5
+    github.setup             cooljeanius ${name} 0.0.6
     #FIXME: just fetch from the tag instead of doing this:
     fetch.type               git
     git.url                  git://github.com/cooljeanius/${name}.git

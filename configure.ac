@@ -2,7 +2,7 @@ dnl#                                               -*- Autoconf -*-
 dnl# Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.72])dnl
-AC_INIT([osxbom],[0.0.5],[https://github.com/cooljeanius/osxbom/issues])dnl
+AC_INIT([osxbom],[0.0.6],[https://github.com/cooljeanius/osxbom/issues])dnl
 AC_CONFIG_SRCDIR([bom.h])dnl
 AC_CONFIG_AUX_DIR([build-aux])dnl
 AC_CONFIG_HEADERS([config.h])dnl
@@ -72,8 +72,8 @@ AC_CHECK_TYPES([NXArchInfo],[],[],[
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
-dnl# some of these are only used by the system implementation, and NOT by
-dnl# this one:
+dnl# some of these are only used by the system implementation of lsbom,
+dnl# and NOT by this one (yet, at least):
 AC_CHECK_FUNCS([NXGetArchInfoFromName atoi cerr cout close exit \
                 fflush fprintf fwrite getopt getopt_long getopt_long_only \
                 getprogname isprint ntohl ntohs printf puts read \

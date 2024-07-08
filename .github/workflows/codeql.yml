@@ -16,10 +16,12 @@ on:
   push:
     branches:
       - master
+      - main
       - dependabot/*
   pull_request:
     branches:
       - master
+      - main
       - dependabot/*
   schedule:
     - cron: '15 22 * * 6'

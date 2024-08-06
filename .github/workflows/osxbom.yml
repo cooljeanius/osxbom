@@ -1,3 +1,5 @@
+---
+
 name: cooljeanius/osxbom
 on:
   push:
@@ -10,26 +12,29 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
-#     # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are currently unsupported
-#     # 'compiler' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: "./configure CC=${{ matrix.compiler }} && make && make check && make distcheck"
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.3.5
-      with:
-        name: osxbom-gzipped_tarfile-${{ matrix.compiler }}-${{ matrix.os }}
-        path: osxbom-0.0.*.tar.gz
-    - name: Upload another Build Artifact
-      uses: actions/upload-artifact@v4.3.5
-      with:
-        name: osxbom-zipfile-${{ matrix.compiler }}-${{ matrix.os }}
-        path: osxbom-0.0.*.zip
+      - name: checkout
+        uses: actions/checkout@v4
+        # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are
+        # currently unsupported
+        # 'compiler' was not transformed because there is no suitable equivalent
+        # in GitHub Actions
+      - run: "./configure CC=${{ matrix.compiler }} && make"
+      - run: "make check && make distcheck"
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.5
+        with:
+          name: osxbom-gzipped_tarfile-${{ matrix.compiler }}-${{ matrix.os }}
+          path: osxbom-0.0.*.tar.gz
+      - name: Upload another Build Artifact
+        uses: actions/upload-artifact@v4.3.5
+        with:
+          name: osxbom-zipfile-${{ matrix.compiler }}-${{ matrix.os }}
+          path: osxbom-0.0.*.zip
     strategy:
       matrix:
         compiler:
-        - clang
-        - gcc
+          - clang
+          - gcc
         os:
-        - ubuntu-latest
-        - macos-latest
+          - ubuntu-latest
+          - macos-latest

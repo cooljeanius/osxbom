@@ -21,12 +21,12 @@ jobs:
       - run: "./configure CC=${{ matrix.compiler }} && make"
       - run: "make check && make distcheck"
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.3.5
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: osxbom-gzipped_tarfile-${{ matrix.compiler }}-${{ matrix.os }}
           path: osxbom-0.0.*.tar.gz
       - name: Upload another Build Artifact
-        uses: actions/upload-artifact@v4.3.5
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: osxbom-zipfile-${{ matrix.compiler }}-${{ matrix.os }}
           path: osxbom-0.0.*.zip

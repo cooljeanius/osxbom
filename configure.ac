@@ -25,6 +25,8 @@ AC_PATH_PROGS([RM_PROG],[rm grm])dnl
 AC_SUBST([RM_PROG])dnl
 AC_PATH_PROGS([ROFF_PROG],[nroff groff roff])dnl
 AC_SUBST([ROFF_PROG])dnl
+AC_PATH_PROGS([YAMLLINT],[yamllint gyamllint])dnl
+AC_SUBST([YAMLLINT])dnl
 
 # Checks for header files.
 AC_DEFUN([AC_REQUIRE_HEADER_STDC],[
@@ -40,15 +42,15 @@ AC_HEADER_STDBOOL dnl# also "_CHECK"s it
 AC_CHECK_HEADERS([arpa/inet.h ctype.h getopt.h mach-o/arch.h])dnl
 
 if test "x${ac_cv_header_stdint_h}" = "x"; then
-  test -z "${ac_cv_header_stdint_h}"
+  test -z "${ac_cv_header_stdint_h}" || unset ac_cv_header_stdint_h
   AC_CHECK_HEADERS([stdint.h])
 fi
 if test "x${ac_cv_header_stdio_h}" = "x"; then
-  test -z "${ac_cv_header_stdio_h}"
+  test -z "${ac_cv_header_stdio_h}" || unset ac_cv_header_stdio_h
   AC_CHECK_HEADERS([stdio.h])
 fi
 if test "x${ac_cv_header_unistd_h}" = "x"; then
-  test -z "${ac_cv_header_unistd_h}"
+  test -z "${ac_cv_header_unistd_h}" || unset ac_cv_header_unistd_h
   AC_CHECK_HEADERS([unistd.h])
 fi
 

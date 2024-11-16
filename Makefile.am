@@ -29,7 +29,7 @@ clean-local:
 	@RM_PROG@ -f $(NAME) $(NAME).o
 .PHONY: clean-local
 
-DISTCLEANFILES = *~ autoscan.log gdb.log .DS_Store out.txt @MAINT@ lsbom.8
+DISTCLEANFILES = *~ build-aux/*~ autoscan.log gdb.log .DS_Store out.txt @MAINT@ lsbom.8
 
 distclean-local: clean-local
 	@RM_PROG@ -fv @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
@@ -50,6 +50,7 @@ EXTRA_DIST += osxbom.xcodeproj/project.pbxproj osxbom.1 lsbom.8
 check-local: ./$(NAME) ${srcdir}/test.bom
 	./$(NAME) >/dev/null
 	./$(NAME) ${srcdir}/test.bom | tee out.txt
+	if test -x "$(YAMLLINT)"; then $(YAMLLINT) .; fi
 .PHONY: check-local
 
 EXTRA_DIST += en.lproj/lsbom.strings expected_results_for_test_bom.txt

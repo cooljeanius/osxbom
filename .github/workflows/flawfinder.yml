@@ -1,5 +1,4 @@
 ---
-
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
@@ -11,7 +10,7 @@ on:
   push:
     branches: ["master"]
   pull_request:
-    # The branches below must be a subset of the branches above
+    # The branches below must be a subset of the branches above:
     branches: ["master"]
   schedule:
     - cron: '29 17 * * 1'

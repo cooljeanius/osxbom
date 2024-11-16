@@ -1,6 +1,5 @@
 ---
-
-# osxbom/.github/workflows/codeql.yml: GitHub Actions codeql workflow for osxbom
+# osxbom/.github/workflows/codeql.yml: GH Actions CodeQL workflow for osxbom
 # For most projects, this workflow file will not need changing; you simply need
 # to commit it to your repository.
 #

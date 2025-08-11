@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are
         # currently unsupported
         # 'compiler' was not transformed because there is no suitable equivalent

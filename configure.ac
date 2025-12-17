@@ -62,6 +62,7 @@ AC_C_PROTOTYPES
 AC_TYPE_UINT8_T
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
+# Return type for NXGetArchInfoFromName (which is referenced from the disassembly):
 AC_CHECK_TYPES([NXArchInfo],[],[],[
 #ifdef HAVE_MACH_O_ARCH_H
 # include <mach-o/arch.h>

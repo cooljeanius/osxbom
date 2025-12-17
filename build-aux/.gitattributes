@@ -1,6 +1,8 @@
-compile linguist-vendored
-config.guess linguist-vendored
-config.sub linguist-vendored
-depcomp linguist-vendored
-install-sh linguist-vendored
-missing linguist-vendored
+# Technically these are all vendored,
+# but I prefer to avoid seeing their diffs:
+compile linguist-generated
+config.guess linguist-generated
+config.sub linguist-generated
+depcomp linguist-generated
+install-sh linguist-generated
+missing linguist-generated

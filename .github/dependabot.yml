@@ -9,6 +9,6 @@ updates:
   - package-ecosystem: "github-actions"  # See docs for possible values
     directory: "/"  # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     cooldown:
       default-days: 7
